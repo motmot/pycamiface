@@ -2,7 +2,7 @@ import os
 
 def generate_choose_module( pyrex_backends, ctypes_backends):
     # make cam_iface_choose/__init__.py
-    fname = os.path.join('motmot','cam_iface_choose','__init__.py')
+    fname = os.path.join('motmot','cam_iface','choose.py')
     fd = open(fname,mode='w')
     fd.write("""# WARNING
 # WARNING
