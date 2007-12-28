@@ -33,7 +33,12 @@ if backend_fname is None:
 
 backend_fullpath = pkg_resources.resource_filename(__name__,backend_fname)
 if sys.platform.startswith('linux'):
-    c_cam_iface = ctypes.cdll.LoadLibrary(backend_fullpath)
+    if os.path.exists(backend_fullpath):
+        # Try to use version packaged with this module
+        c_cam_iface = ctypes.cdll.LoadLibrary(backend_fullpath)
+    else:
+        # Try to use system version
+        c_cam_iface = ctypes.cdll.LoadLibrary(backend_fname)
 elif sys.platform.startswith('win'):
     c_cam_iface = ctypes.CDLL(backend_fullpath)
 elif sys.platform.startswith('darwin'):
