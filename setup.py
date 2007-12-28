@@ -1,19 +1,17 @@
 from setuptools import setup, find_packages
 from setuptools.dist import Distribution
-
 import os, sys
-
-from motmot_utils import get_svnversion_persistent
-version_str = '0.4.dev%(svnversion)s'
-version = get_svnversion_persistent('cam_iface/version.py',version_str)
 
 import setupext, setup_autogen
 
-
-kws={}
+package_data={}
 ext_modules = []
 
-build_ctypes_based_wrapper = True
+build_ctypes_based_wrappers = True
+include_shlibs_for_ctypes = True
+
+if sys.platform.startswith('linux'):
+    include_shlibs_for_ctypes = False
 
 if sys.platform == 'win32':
     build_pyrex_based_wrappers = False
@@ -22,7 +20,7 @@ else:
     build_pyrex_based_wrappers = True
 
 ctypes_backends = []
-if build_ctypes_based_wrapper:
+if build_ctypes_based_wrappers:
     fname = '/usr/share/camiface/backends.txt'
     if os.path.exists(fname):
         ctypes_backends.extend( open(fname,'rb').read().split() )
@@ -35,23 +33,23 @@ if build_ctypes_based_wrapper:
         print
         print '*'*80
         print '*'*80
-    if sys.platform == 'win32':
-        prefix = 'cam_iface_'
-        extension = '.dll'
-    elif sys.platform.startswith('linux'):
-        prefix = 'libcam_iface_'
-        extension = '.so'
-    elif sys.platform.startswith('darwin'):
-        prefix = 'libcam_iface_'
-        extension = '.dylib'
-    else:
-        raise ValueError('unknown platform')
-    for backend in ctypes_backends:
-        fname = prefix+backend+extension
-        if not os.path.exists(os.path.join('cam_iface',fname)):
-            print '***** WARNING: Could not find file %s'%fname
-        kws.setdefault('package_data',{}).setdefault('cam_iface',[]).append(fname)
-
+    if include_shlibs_for_ctypes:
+        if sys.platform == 'win32':
+            prefix = 'cam_iface_'
+            extension = '.dll'
+        elif sys.platform.startswith('linux'):
+            prefix = 'libcam_iface_'
+            extension = '.so'
+        elif sys.platform.startswith('darwin'):
+            prefix = 'libcam_iface_'
+            extension = '.dylib'
+        else:
+            raise ValueError('unknown platform')
+        for backend in ctypes_backends:
+            fname = prefix+backend+extension
+            if not os.path.exists(os.path.join('cam_iface',fname)):
+                print '***** WARNING: Could not find file %s'%fname
+            package_data.setdefault('cam_iface',[]).append(fname)
 
 ext_modules.append( setupext.get_shm_extension() )
 
@@ -65,7 +63,8 @@ if build_pyrex_based_wrappers:
     elif sys.platform.startswith('linux'):
         #ext_modules.append( setupext.get_dc1394_extension() ); pyrex_backends.append('dc1394')
         try:
-            ext_modules.append( setupext.get_camwire_extension() ); pyrex_backends.append('camwire')
+            ext_modules.append( setupext.get_camwire_extension() )
+            pyrex_backends.append('camwire')
         except Exception,err:
             print 'WARNING: Not building camwire pyrex backend (error "%s")'%str(err)
 
@@ -76,11 +75,11 @@ class PlatformDependentDistribution(Distribution):
 
 setup_autogen.generate_choose_module(pyrex_backends, ctypes_backends)
 
-setup(name='cam_iface',
-      description='cross-platform cross-backend camera driver',
+setup(name='motmot.cam_iface',
+      description='cross-platform, cross-backend camera driver',
       long_description="""cam_iface is the core packge of several that
 are involved with digital camera acquisition and analysis""",
-      version=version,
+      version='0.4.1',
       author='Andrew Straw',
       author_email='strawman@astraw.com',
       license="BSD",
@@ -89,4 +88,5 @@ are involved with digital camera acquisition and analysis""",
       ext_modules=ext_modules,
       zip_safe=True,
       distclass = PlatformDependentDistribution,
-      **kws)
+      package_data=package_data,
+      )

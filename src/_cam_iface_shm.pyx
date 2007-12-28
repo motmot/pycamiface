@@ -19,8 +19,8 @@ ctypedef struct PyArrayInterface:
     c_python.Py_intptr_t *strides # A length-nd array of stride information
     void *data                    # A pointer to the first element of the array
 
-cdef extern from "shmwrap.h":
-    # defined in shmwrap.h
+cdef extern from "cam_iface_shmwrap.h":
+    # defined in cam_iface_shmwrap.h
     char *shmwrap_ftok_path
     char shmwrap_shm_name
     c_lib.size_t shm_size
@@ -37,7 +37,7 @@ cdef extern from "shmwrap.h":
         double timestamp
         int start_offset
         int stride
-        
+
 def perror(msg):
     print msg
 
@@ -58,16 +58,16 @@ cdef char* _get_shm_pointer(int create):
     if create:
         fd = open(shmwrap_ftok_path,"a") # open in append mode
         fd.close()
-    
+
     key = c_lib_shm.ftok(shmwrap_ftok_path, shmwrap_shm_name)
-    
+
     if key==-1:
         perror("ftok")
         sys.exit(1)
 
     if create:
         shmflg = 0644 | c_lib_shm.IPC_CREAT
-        
+
     else:
         shmflg = 0644
     shmid = c_lib_shm.shmget(key, shm_size, shmflg);
@@ -98,7 +98,7 @@ cdef class ShmManager:
         cdef PyArrayInterface* inter
         cdef c_lib.size_t source_stride, dest_stride
         cdef void* dest_ptr
-        
+
         buf = numpy.asarray(buf)
         assert len(buf.shape)==2
         assert buf.dtype == numpy.uint8
@@ -107,7 +107,7 @@ cdef class ShmManager:
         dest_stride = width
         source_stride = buf.strides[0]
 
-        hold_onto_until_done_with_array = buf.__array_struct__ 
+        hold_onto_until_done_with_array = buf.__array_struct__
         inter = <PyArrayInterface*>c_python.PyCObject_AsVoidPtr( hold_onto_until_done_with_array )
         assert inter.two == 2
 
@@ -115,7 +115,7 @@ cdef class ShmManager:
 
 
         dest_ptr = add_ptr2(self.data,offset)
-        
+
         for row from 0<=row<height:
             c_lib.memcpy( add_ptr2(dest_ptr,row*dest_stride),
                           add_ptr2(inter.data,row*source_stride),
@@ -126,8 +126,8 @@ cdef class ShmManager:
         curmsg.stride = width
         curmsg.start_offset = offset
         return curmsg
-    
-cdef shmwrap_msg_ready_t _tmp_curmsg 
+
+cdef shmwrap_msg_ready_t _tmp_curmsg
 shmwrap_msg_ready_t_size = sizeof(_tmp_curmsg)
 
 shmwrap_frame_ready_port_ = shmwrap_frame_ready_port
@@ -142,7 +142,7 @@ class Stuff:
 def buf2class(buf):
     cdef char* cbuf
     cdef shmwrap_msg_ready_t *pack
-    
+
     cbuf = buf # convert to C
     pack = <shmwrap_msg_ready_t *>&(cbuf[0])
     result = Stuff()
@@ -157,7 +157,7 @@ def buf2class(buf):
     result.start_offset = pack.start_offset
     result.stride = pack.stride
     return result
-    
+
 def get_data_copy(curmsg, optional_preallocated_buf=None):
     """copy image from shared memory.
 
@@ -172,7 +172,7 @@ which must support the __array_struct__ interface.
     cdef int source_stride,dest_stride,rowoffset
     cdef int buflen
     cdef PyArrayInterface* inter
-    
+
     if optional_preallocated_buf is not None:
         optional_preallocated_buf = numpy.asarray(optional_preallocated_buf)
         assert len(optional_preallocated_buf.shape)==2
@@ -190,17 +190,17 @@ which must support the __array_struct__ interface.
     if _shm_manager is None:
         # initialize shared memory access
         _shm_manager = ShmManager()
-    
+
     source_ptr = _shm_manager.data + start_offset
     size = height*source_stride
-    
+
     if optional_preallocated_buf is not None:
         result = optional_preallocated_buf
         # keep reference to prevent dealloc:
-        hold_onto_until_done_with_array = result.__array_struct__ 
+        hold_onto_until_done_with_array = result.__array_struct__
         inter = <PyArrayInterface*>c_python.PyCObject_AsVoidPtr( hold_onto_until_done_with_array )
         assert inter.two == 2
-        
+
         for row from 0<=row<height:
             c_lib.memcpy( add_ptr2(inter.data,row*dest_stride),   # dest
                           add_ptr2(source_ptr,row*source_stride), # src
