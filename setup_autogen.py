@@ -2,7 +2,7 @@ import os
 
 def generate_choose_module( pyrex_backends, ctypes_backends):
     # make cam_iface_choose/__init__.py
-    fname = os.path.join('cam_iface_choose','__init__.py')
+    fname = os.path.join('motmot','cam_iface_choose','__init__.py')
     fd = open(fname,mode='w')
     fd.write("""# WARNING
 # WARNING
@@ -52,43 +52,43 @@ def import_backend( lib_name, wrapper ):
         raise ValueError("Valid backends for the '%s' wrapper: %s (You asked for '%s'.)"%
                          (wrapper,str(valid_backends),lib_name))
     if wrapper == 'ctypes':
-        if 'cam_iface.cam_iface_ctypes' in sys.modules:
+        if 'motmot.cam_iface.cam_iface_ctypes' in sys.modules:
             raise RuntimeError('ctypes backend already imported')
         orig = os.environ.get('CAM_IFACE_CTYPES_BACKEND',None)
         os.environ['CAM_IFACE_CTYPES_BACKEND'] = (prefix+'cam_iface_'+
                                                   lib_name+extension)
-        import cam_iface.cam_iface_ctypes as result
+        import motmot.cam_iface.cam_iface_ctypes as result
         if orig is None:
             del os.environ['CAM_IFACE_CTYPES_BACKEND']
         else:
             os.environ['CAM_IFACE_CTYPES_BACKEND'] = orig
     elif wrapper == 'pyrex':
-        mod_name = 'cam_iface._cam_iface_' + lib_name
+        mod_name = 'motmot.cam_iface._cam_iface_' + lib_name
         result = my_import(mod_name)
     elif wrapper == 'dummy':
         if 'cam_iface' in sys.modules:
-            if 'cam_iface.cam_iface_dummy' not in sys.modules:
+            if 'motmot.cam_iface.cam_iface_dummy' not in sys.modules:
                 raise RuntimeError('dummy backend must be first cam_iface backend')
         if lib_name != 'dummy':
             raise ValueError('unknown dummy backend requested')
 
         orig = os.environ.get('CAM_IFACE_DUMMY',None)
         os.environ['CAM_IFACE_DUMMY'] = '1'
-        result = my_import('cam_iface.cam_iface_dummy')
+        result = my_import('motmot.cam_iface.cam_iface_dummy')
         if orig is None:
             del os.environ['CAM_IFACE_DUMMY']
         else:
             os.environ['CAM_IFACE_DUMMY'] = orig
     elif wrapper == 'sharedmem':
         if 'cam_iface' in sys.modules:
-            if 'cam_iface.cam_iface_sharedmem' not in sys.modules:
+            if 'motmot.cam_iface.cam_iface_sharedmem' not in sys.modules:
                 raise RuntimeError('sharedmem backend must be first cam_iface backend')
         if lib_name != 'sharedmem':
             raise ValueError('unknown sharedmem backend requested')
 
         orig = os.environ.get('CAM_IFACE_SHAREDMEM',None)
         os.environ['CAM_IFACE_SHAREDMEM'] = '1'
-        result = my_import('cam_iface.cam_iface_sharedmem')
+        result = my_import('motmot.cam_iface.cam_iface_sharedmem')
         if orig is None:
             del os.environ['CAM_IFACE_SHAREDMEM']
         else:

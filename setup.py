@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.dist import Distribution
 
 import os, sys
@@ -23,7 +23,7 @@ else:
 
 ctypes_backends = []
 if build_ctypes_based_wrapper:
-    fname = 'ctypes_backends.txt'
+    fname = '/usr/share/camiface/backends.txt'
     if os.path.exists(fname):
         ctypes_backends.extend( open(fname,'rb').read().split() )
     else:
@@ -68,12 +68,12 @@ if build_pyrex_based_wrappers:
             ext_modules.append( setupext.get_camwire_extension() ); pyrex_backends.append('camwire')
         except Exception,err:
             print 'WARNING: Not building camwire pyrex backend (error "%s")'%str(err)
-            
+
 class PlatformDependentDistribution(Distribution):
     # Force platform-dependant build.
     def has_ext_modules(self):
         return True
-    
+
 setup_autogen.generate_choose_module(pyrex_backends, ctypes_backends)
 
 setup(name='cam_iface',
@@ -84,7 +84,8 @@ are involved with digital camera acquisition and analysis""",
       author='Andrew Straw',
       author_email='strawman@astraw.com',
       license="BSD",
-      packages = ['cam_iface','cam_iface_choose'],
+      namespace_packages = ['motmot'],
+      packages = find_packages(),#['cam_iface','cam_iface_choose'],
       ext_modules=ext_modules,
       zip_safe=True,
       distclass = PlatformDependentDistribution,
