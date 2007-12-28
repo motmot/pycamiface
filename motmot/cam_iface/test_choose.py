@@ -1,4 +1,4 @@
-import cam_iface_choose
+import choose as cam_iface_choose
 import sys
 
 def main():
