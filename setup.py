@@ -29,7 +29,7 @@ if build_ctypes_based_wrappers:
         print '*'*80
         print
         print 'WARNING: no %s exists have you'\
-              'installed camiface?'%fname
+              ' installed camiface?'%fname
         print
         print '*'*80
         print '*'*80
