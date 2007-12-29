@@ -28,8 +28,8 @@ if build_ctypes_based_wrappers:
         print '*'*80
         print '*'*80
         print
-        print 'WARNING: no ctypes_backends appear to exist '\
-              '- have you run scons?'
+        print 'WARNING: no %s exists have you'\
+              'installed camiface?'%fname
         print
         print '*'*80
         print '*'*80
