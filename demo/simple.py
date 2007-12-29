@@ -1,4 +1,4 @@
-import cam_iface_choose
+import motmot.cam_iface.choose as cam_iface_choose
 
 #cam_iface = cam_iface_choose.import_backend( 'prosilica_gige', 'ctypes' )
 cam_iface = cam_iface_choose.import_backend( 'dc1394', 'ctypes' )
@@ -8,7 +8,7 @@ import time, sys, os
 from optparse import OptionParser
 
 # for save mode:
-import FlyMovieFormat
+import motmot.FlyMovieFormat.FlyMovieFormat as FlyMovieFormat
 import Queue
 import threading
 
