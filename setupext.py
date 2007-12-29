@@ -25,18 +25,6 @@ def temp_copy(_from, _to):
     # Make an object to eliminate the temporary file at exit time.
     globals()["_cleanup_"+_to] = CleanUpFile(_to)
 
-def add_system_raw1394(ext):
-    """Add build requirements for system's libraw1394"""
-    if not os.path.exists('/usr/include/libraw1394/raw1394.h'):
-        raise RuntimeError('libraw1394 not in system headers - refusing to build')
-    ext.libraries.append('raw1394')
-
-def add_system_libdc1394(ext):
-    """Add build requirements for system's libdc1394"""
-    if not os.path.exists('/usr/include/libdc1394/dc1394_control.h'):
-        raise RuntimeError('libdc1394 not in system headers - refusing to build')
-    ext.libraries.append('dc1394_control')
-
 def add_cmu1394(ext):
     """Add build requirements for CMU 1394 library"""
     ext.include_dirs.append(r'cmu1394\include')
@@ -104,8 +92,6 @@ def get_camwire_extension(debug=None):
                                   ('CAMWIRE_DEBUG',1),
                                   ])
     ext.libraries.append('cam_iface_camwire')
-    add_system_raw1394(ext)
-    add_system_libdc1394(ext)
     return ext
 
 def get_cmu1394_extension(debug=None):
