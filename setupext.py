@@ -25,6 +25,12 @@ def temp_copy(_from, _to):
     # Make an object to eliminate the temporary file at exit time.
     globals()["_cleanup_"+_to] = CleanUpFile(_to)
 
+def add_system_camiface(ext):
+    """Add build requirements for system's camiface"""
+    if not os.path.exists('/usr/include/cam_iface.h'):
+        raise RuntimeError('cam_iface.h not in system headers - refusing to build')
+    ext.libraries.append('camiface')
+
 def add_system_raw1394(ext):
     """Add build requirements for system's libraw1394"""
     if not os.path.exists('/usr/include/libraw1394/raw1394.h'):
@@ -95,22 +101,15 @@ def get_camwire_extension(debug=None):
     new_fname='src/_cam_iface_camwire.pyx'
     temp_copy(orig_fname,new_fname)
 
-    camwire_sources = ['camwire/src/camwire_1394.c',
-                       'camwire/src/camwirebus_1394.c',
-                       #'camwire/src/camwireconfig_1394.c',
-                       #'camwire/src/camwiresettings_1394.c',
-                       ]
-    camwire_include_dirs = ['camwire/src'] # subdir camwire included
-
     ext = Extension(name='motmot.cam_iface._cam_iface_camwire',
-                    sources=([new_fname,'src/cam_iface_camwire.c']
-                             +camwire_sources),
-                    include_dirs=['inc']+camwire_include_dirs,
+                    sources=[new_fname],
+                    include_dirs=['inc'],
                     )
     if debug is not None:
         ext.define_macros.extend([('CAM_IFACE_DEBUG',1),
                                   ('CAMWIRE_DEBUG',1),
                                   ])
+    add_system_camiface(ext)
     add_system_raw1394(ext)
     add_system_libdc1394(ext)
     return ext
