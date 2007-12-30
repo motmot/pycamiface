@@ -3,7 +3,7 @@ import os, sys
 import numpy
 
 if sys.platform.startswith('linux'):
-    import cam_iface._cam_iface_shm as cishm
+    import motmot.cam_iface._cam_iface_shm as cishm
 
 class TestWrapper(unittest.TestCase):
 
@@ -14,9 +14,9 @@ class TestWrapper(unittest.TestCase):
     # to each call.
 
     def _get_cam_iface(self):
-        import cam_iface_ctypes as cam_iface
+        import cam_iface_ctypes as cam_iface # relative import
         return cam_iface
-        
+
     def _get_cam(self,device_num=0):
         cam_iface = self._get_cam_iface()
         num_cameras = cam_iface.get_num_cameras()
@@ -81,7 +81,7 @@ class TestShm(unittest.TestCase):
         result_preallocated2 = cishm.get_data_copy(curmsg,result_preallocated)
         assert numpy.allclose( result_preallocated, fake_image )
         assert result_preallocated2 is result_preallocated
-        
+
 def get_test_suite():
     suites = [
         unittest.makeSuite(TestWrapper),
