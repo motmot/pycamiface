@@ -16,23 +16,24 @@ if sys.platform.startswith('linux'):
 if sys.platform == 'win32':
     build_pyrex_based_wrappers = False
 else:
-    #build_pyrex_based_wrappers = False
-    build_pyrex_based_wrappers = True
+    build_pyrex_based_wrappers = False
+    #build_pyrex_based_wrappers = True
 
-ctypes_backends = []
+ctypes_backends = ['unity']
 if build_ctypes_based_wrappers:
-    fname = '/usr/share/camiface/backends.txt'
-    if os.path.exists(fname):
-        ctypes_backends.extend( open(fname,'rb').read().split() )
-    else:
-        print '*'*80
-        print '*'*80
-        print
-        print 'WARNING: no %s exists have you'\
-              ' installed camiface?'%fname
-        print
-        print '*'*80
-        print '*'*80
+    if 0:
+        fname = '/usr/share/camiface/backends.txt'
+        if os.path.exists(fname):
+            ctypes_backends.extend( open(fname,'rb').read().split() )
+        else:
+            print '*'*80
+            print '*'*80
+            print
+            print 'WARNING: no %s exists have you'\
+                  ' installed camiface?'%fname
+            print
+            print '*'*80
+            print '*'*80
     if include_shlibs_for_ctypes:
         if sys.platform == 'win32':
             prefix = 'cam_iface_'
