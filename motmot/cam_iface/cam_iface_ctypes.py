@@ -87,12 +87,14 @@ class Camwire_id(ctypes.Structure):
                 ]
 
 class CamContext(ctypes.Structure):
-    _fields_ = [('cam',ctypes.c_void_p),
+    _fields_ = [('vmt',ctypes.c_void_p),
+                ('cam',ctypes.c_void_p),
                 ('backend_extras',ctypes.c_void_p),
                 ('coding',ctypes.c_int),
                 ('depth',ctypes.c_int),
                 ('device_number',ctypes.c_int),
                 ]
+PTR_CamContext_t = ctypes.POINTER( CamContext )
 
 class CameraPropertyInfo(ctypes.Structure):
     _fields_ = [('name',ctypes.c_char_p),
@@ -115,9 +117,9 @@ c_cam_iface.cam_iface_get_mode_string.argtypes = [ctypes.c_int,
                                                   ctypes.c_int,
                                                   ctypes.POINTER(ctypes.c_char),
                                                   ctypes.c_int]
-c_cam_iface.new_CamContext.restype = ctypes.POINTER(CamContext)
-c_cam_iface.new_CamContext.argtypes = [ctypes.c_int,ctypes.c_int,
-                                       ctypes.c_int]
+cam_iface_constructor_func_t = ctypes.CFUNCTYPE( PTR_CamContext_t, ctypes.c_int, ctypes.c_int, ctypes.c_int )
+c_cam_iface.cam_iface_get_constructor_func.restype = cam_iface_constructor_func_t
+c_cam_iface.cam_iface_get_constructor_func.argtypes = [ctypes.c_int]
 c_cam_iface.delete_CamContext.argtypes = [ctypes.POINTER(CamContext)]
 c_cam_iface.CamContext_start_camera.argtypes = [ctypes.POINTER(CamContext)]
 c_cam_iface.CamContext_stop_camera.argtypes = [ctypes.POINTER(CamContext)]
@@ -264,8 +266,9 @@ class Camera:
     def __init__(self,device_number,num_buffers,mode_number):
         if THREAD_DEBUG:
             self.mythread=threading.currentThread()
-        self.cval = c_cam_iface.new_CamContext(device_number,num_buffers,
-                                               mode_number)
+        new_CamContext = c_cam_iface.cam_iface_get_constructor_func(device_number)
+        self.cval = new_CamContext(device_number,num_buffers,
+                                   mode_number)
         _check_error()
 
     def __del__(self):
