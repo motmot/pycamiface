@@ -26,6 +26,10 @@ def main():
     parser.add_option("--save", action='store_true',
                       help="save frames to .fmf")
 
+    parser.add_option("--trigger-mode", type="int",
+                      help="set trigger mode",
+                      default=None, dest='trigger_mode')
+
     (options, args) = parser.parse_args()
 
     print 'options.mode_num',options.mode_num
@@ -36,7 +40,8 @@ def main():
         mode_num = 0
     doit(mode_num=mode_num,
          save=options.save,
-         max_frames = options.frames)
+         max_frames = options.frames,
+         trigger_mode=options.trigger_mode,)
 
 def save_func( fly_movie, save_queue ):
     while 1:
@@ -49,6 +54,7 @@ def doit(device_num=0,
          num_buffers=30,
          save=False,
          max_frames=None,
+         trigger_mode=None,
          ):
     num_modes = cam_iface.get_num_modes(device_num)
     for this_mode_num in range(num_modes):
@@ -76,6 +82,14 @@ def doit(device_num=0,
     num_props = cam.get_num_camera_properties()
     #for i in range(num_props):
     #    print "property %d: %s"%(i,str(cam.get_camera_property_info(i)))
+
+    n_trigger_modes = cam.get_num_trigger_modes()
+    print "Trigger modes:"
+    for i in range(n_trigger_modes):
+        print ' %d: %s'%(i,cam.get_trigger_mode_string(i))
+    if trigger_mode is not None:
+        cam.set_trigger_mode_number( trigger_mode )
+    print 'Using trigger mode %d'%(cam.get_trigger_mode_number())
 
     cam.start_camera()
     frametick = 0
