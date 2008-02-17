@@ -208,6 +208,9 @@ class FrameTimeout(CamIFaceError):
 class FrameDataMissing(CamIFaceError):
     pass
 
+class FrameSystemCallInterruption(CamIFaceError):
+    pass
+
 class HardwareFeatureNotAvailable(CamIFaceError):
     pass
 
@@ -217,6 +220,7 @@ def _check_error():
     CAM_IFACE_FRAME_TIMEOUT=-392074
     CAM_IFACE_FRAME_DATA_LOST_ERROR=-392075
     CAM_IFACE_HARDWARE_FEATURE_NOT_AVAILABLE=-392076
+    CAM_IFACE_FRAME_INTERRUPTED_SYSCALL=-392078
 
     errnum = c_cam_iface.cam_iface_have_error()
     if errnum != 0:
@@ -225,6 +229,8 @@ def _check_error():
             exc_type = BuffersOverflowed
         elif errnum == CAM_IFACE_FRAME_DATA_MISSING_ERROR:
             exc_type = FrameDataMissing
+        elif errnum == CAM_IFACE_FRAME_INTERRUPTED_SYSCALL:
+            exc_type = FrameSystemCallInterruption
         elif errnum == CAM_IFACE_FRAME_TIMEOUT:
             exc_type = FrameTimeout
         elif errnum == CAM_IFACE_HARDWARE_FEATURE_NOT_AVAILABLE:

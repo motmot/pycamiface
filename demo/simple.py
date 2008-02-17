@@ -1,7 +1,6 @@
 import motmot.cam_iface.choose as cam_iface_choose
 
-#cam_iface = cam_iface_choose.import_backend( 'prosilica_gige', 'ctypes' )
-cam_iface = cam_iface_choose.import_backend( 'dc1394', 'ctypes' )
+cam_iface = cam_iface_choose.import_backend( 'unity', 'ctypes' )
 
 import numpy as nx
 import time, sys, os
@@ -88,6 +87,10 @@ def doit(device_num=0,
             buf = nx.asarray(cam.grab_next_frame_blocking())
         except cam_iface.FrameDataMissing:
             sys.stdout.write('M')
+            sys.stdout.flush()
+            continue
+        except cam_iface.FrameSystemCallInterruption:
+            sys.stdout.write('I')
             sys.stdout.flush()
             continue
 
