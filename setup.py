@@ -52,7 +52,18 @@ if build_ctypes_based_wrappers:
                 print '***** WARNING: Could not find file %s'%fname
             package_data.setdefault('cam_iface',[]).append(fname)
 
-ext_modules.append( setupext.get_shm_extension() )
+if 0:
+    opj = os.path.join
+    CAMIFACE_PREFIX='../cam_iface'
+    include_dirs = [opj(CAMIFACE_PREFIX,'inc'),
+                    opj(CAMIFACE_PREFIX,'shmwrap')]
+    libpath = os.path.abspath(opj(CAMIFACE_PREFIX,'lib'))
+    print 'WARNING: compiling without system install of camiface. You probably need to do this:'
+    print 'export LD_LIBRARY_PATH=%s'%libpath
+    print 'export UNITY_BACKEND_DIR=%s'%libpath
+else:
+    include_dirs = None
+ext_modules.append( setupext.get_shm_extension(include_dirs=include_dirs) )
 
 pyrex_backends = []
 if build_pyrex_based_wrappers:
