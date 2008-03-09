@@ -20,6 +20,13 @@ def get_num_cameras():
 def get_camera_info(index):
     return 'Dummy Vendor', 'Dummy Model', 'Dummy Chip ID'
 
+def get_num_modes(device_number):
+    return 1
+
+def get_mode_string(device_number,mode_number):
+    assert device_number==0
+    return 'default mode'
+
 class Camera:
     def __init__(self,*args,**kw):
         self.w = 656
@@ -81,7 +88,7 @@ class Camera:
     def set_frame_size(self, width, height):
         if width!=self.w or height!=self.h:
             raise RuntimeError('not supported')
-        
+
 class CamIFaceError(Exception):
     pass
 class BuffersOverflowed(Exception):
