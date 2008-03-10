@@ -284,8 +284,10 @@ class Camera:
         if c_cam_iface is None:
             # weird python stuff sometimes causes this to happen
             return
-        c_cam_iface.delete_CamContext(self.cval)
-        _check_error()
+        if self.cval is not None:
+            c_cam_iface.delete_CamContext(self.cval)
+            _check_error()
+            self.cval = None
 
     def close(self):
         if THREAD_DEBUG:
@@ -293,6 +295,7 @@ class Camera:
                 raise RuntimeError("Camera class is not thread safe!")
         c_cam_iface.delete_CamContext(self.cval)
         _check_error()
+        self.cval = None
 
     def start_camera(self):
         if THREAD_DEBUG:
