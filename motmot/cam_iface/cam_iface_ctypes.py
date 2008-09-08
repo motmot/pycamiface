@@ -139,7 +139,7 @@ c_cam_iface.CamContext_grab_next_frame_blocking_with_stride.argtypes = [
     ]
 c_cam_iface.CamContext_get_last_framenumber.argtypes = [
     ctypes.POINTER(CamContext),
-    ctypes.POINTER(ctypes.c_unsigned_long)]
+    ctypes.POINTER(ctypes.c_ulong)]
 c_cam_iface.CamContext_get_num_camera_properties.argtypes = [
     ctypes.POINTER(CamContext),
     ctypes.POINTER(ctypes.c_int)]
@@ -379,7 +379,7 @@ class Camera:
         if THREAD_DEBUG:
             if self.mythread!=threading.currentThread():
                 raise RuntimeError("Camera class is not thread safe!")
-        framenumber = ctypes.c_unsigned_long(0)
+        framenumber = ctypes.c_ulong(0)
         c_cam_iface.CamContext_get_last_framenumber(self.cval,ctypes.byref(framenumber))
         _check_error()
         return framenumber.value
