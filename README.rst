@@ -9,3 +9,14 @@
   single: cam_iface
 
 This is a ctypes wrapper of :ref:`libcamiface`.
+
+installation
+============
+
+  python setup.py install
+
+License
+=======
+
+pycamiface is licensed under the BSD license. See the LICENSE.txt file
+for the full description.
