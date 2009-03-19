@@ -123,9 +123,11 @@ c_cam_iface.cam_iface_get_constructor_func.argtypes = [ctypes.c_int]
 c_cam_iface.delete_CamContext.argtypes = [ctypes.POINTER(CamContext)]
 c_cam_iface.CamContext_start_camera.argtypes = [ctypes.POINTER(CamContext)]
 c_cam_iface.CamContext_stop_camera.argtypes = [ctypes.POINTER(CamContext)]
-c_cam_iface.CamContext_get_frame_size.argtypes = [ctypes.POINTER(CamContext),
-                                                  ctypes.POINTER(ctypes.c_int),
-                                                  ctypes.POINTER(ctypes.c_int)]
+c_cam_iface.CamContext_get_frame_roi.argtypes = [ctypes.POINTER(CamContext),
+                                                 ctypes.POINTER(ctypes.c_int),
+                                                 ctypes.POINTER(ctypes.c_int),
+                                                 ctypes.POINTER(ctypes.c_int),
+                                                 ctypes.POINTER(ctypes.c_int)]
 c_cam_iface.CamContext_grab_next_frame_blocking.argtypes = [
     ctypes.POINTER(CamContext),
     ctypes.c_void_p,
@@ -159,12 +161,16 @@ c_cam_iface.CamContext_set_camera_property.argtypes = [
     ctypes.c_long,
     ctypes.c_int,
     ]
-c_cam_iface.CamContext_set_frame_offset.argtypes = [
+c_cam_iface.CamContext_set_frame_roi.argtypes = [
     ctypes.POINTER(CamContext),
     ctypes.c_int,
+    ctypes.c_int,
+    ctypes.c_int,
     ctypes.c_int]
-c_cam_iface.CamContext_set_frame_size.argtypes = [
+c_cam_iface.CamContext_set_frame_roi.argtypes = [
     ctypes.POINTER(CamContext),
+    ctypes.c_int,
+    ctypes.c_int,
     ctypes.c_int,
     ctypes.c_int]
 c_cam_iface.CamContext_get_num_trigger_modes.argtypes = [
@@ -315,11 +321,15 @@ class Camera:
         if THREAD_DEBUG:
             if self.mythread!=threading.currentThread():
                 raise RuntimeError("Camera class is not thread safe!")
+        l = ctypes.c_int(0)
+        t = ctypes.c_int(0)
         w = ctypes.c_int(0)
         h = ctypes.c_int(0)
-        c_cam_iface.CamContext_get_frame_size(self.cval,
-                                              ctypes.byref(w),
-                                              ctypes.byref(h))
+        c_cam_iface.CamContext_get_frame_roi(self.cval,
+                                             ctypes.byref(l),
+                                             ctypes.byref(t),
+                                             ctypes.byref(w),
+                                             ctypes.byref(h))
         _check_error()
         buf = N.empty((h.value,(w.value*self.cval.contents.depth)/8),dtype=N.uint8)
         if isinstance(buf.ctypes.data,ctypes.c_void_p):
@@ -356,9 +366,13 @@ class Camera:
         if THREAD_DEBUG:
             if self.mythread!=threading.currentThread():
                 raise RuntimeError("Camera class is not thread safe!")
+        l = ctypes.c_int(0)
+        t = ctypes.c_int(0)
         h = ctypes.c_int(0)
         w = ctypes.c_int(0)
-        c_cam_iface.CamContext_get_frame_size(self.cval,ctypes.byref(w),ctypes.byref(h))
+        c_cam_iface.CamContext_get_frame_roi(self.cval,
+                                             ctypes.byref(l),ctypes.byref(t),
+                                             ctypes.byref(w),ctypes.byref(h))
         _check_error()
 
         buf = buf_alloc((w.value*self.cval.contents.depth)/8,
@@ -496,42 +510,28 @@ class Camera:
         _check_error()
         return max_height.value
 
-    def get_frame_offset(self):
+    def get_frame_roi(self):
         if THREAD_DEBUG:
             if self.mythread!=threading.currentThread():
                 raise RuntimeError("Camera class is not thread safe!")
         left = ctypes.c_int(0)
         top = ctypes.c_int(0)
-        c_cam_iface.CamContext_get_frame_offset(self.cval,
-                                                ctypes.byref(left),
-                                                ctypes.byref(top))
-        _check_error()
-        return left.value, top.value
-
-    def get_frame_size(self):
-        if THREAD_DEBUG:
-            if self.mythread!=threading.currentThread():
-                raise RuntimeError("Camera class is not thread safe!")
         width = ctypes.c_int(0)
         height = ctypes.c_int(0)
-        c_cam_iface.CamContext_get_frame_size(self.cval,
-                                              ctypes.byref(width),
-                                              ctypes.byref(height))
-        _check_error()
-        return width.value, height.value
+        c_cam_iface.CamContext_get_frame_roi(self.cval,
+                                                ctypes.byref(left),
+                                                ctypes.byref(top),
+                                                ctypes.byref(width),
+                                                ctypes.byref(height))
 
-    def set_frame_offset(self, left, top):
+        _check_error()
+        return left.value, top.value, width.value, height.value
+
+    def set_frame_roi(self, left, top, width, height):
         if THREAD_DEBUG:
             if self.mythread!=threading.currentThread():
                 raise RuntimeError("Camera class is not thread safe!")
-        c_cam_iface.CamContext_set_frame_offset(self.cval, left, top)
-        _check_error()
-
-    def set_frame_size(self, width, height):
-        if THREAD_DEBUG:
-            if self.mythread!=threading.currentThread():
-                raise RuntimeError("Camera class is not thread safe!")
-        c_cam_iface.CamContext_set_frame_size(self.cval, width, height)
+        c_cam_iface.CamContext_set_frame_roi(self.cval, left, top, width, height)
         _check_error()
 
     def get_num_trigger_modes(self):
