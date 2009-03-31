@@ -91,7 +91,7 @@ setup(name='motmot.cam_iface',
       description='cross-platform, cross-backend camera driver',
       long_description="""cam_iface is the core packge of several that
 are involved with digital camera acquisition and analysis""",
-      version='0.4.1',
+      version='0.4.2',
       author='Andrew Straw',
       author_email='strawman@astraw.com',
       license="BSD",
