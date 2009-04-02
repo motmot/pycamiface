@@ -167,12 +167,6 @@ c_cam_iface.CamContext_set_frame_roi.argtypes = [
     ctypes.c_int,
     ctypes.c_int,
     ctypes.c_int]
-c_cam_iface.CamContext_set_frame_roi.argtypes = [
-    ctypes.POINTER(CamContext),
-    ctypes.c_int,
-    ctypes.c_int,
-    ctypes.c_int,
-    ctypes.c_int]
 c_cam_iface.CamContext_get_num_trigger_modes.argtypes = [
     ctypes.POINTER(CamContext),
     ctypes.POINTER(ctypes.c_int)]
