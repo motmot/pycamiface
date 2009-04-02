@@ -109,6 +109,17 @@ class CameraPropertyInfo(ctypes.Structure):
                 ('scale_gain',ctypes.c_double),
                 ]
 
+c_cam_iface.cam_iface_get_api_version.restype = ctypes.c_char_p
+
+def _ensure_cam_iface_version_OK():
+    actual = c_cam_iface.cam_iface_get_api_version()
+    expected = "20090331"
+    if actual != expected:
+        raise RuntimeError("libcamiface mismatch: expected %s, got %s"%(
+            expected,actual))
+
+_ensure_cam_iface_version_OK()
+
 c_cam_iface.cam_iface_get_driver_name.restype = ctypes.c_char_p
 c_cam_iface.cam_iface_get_error_string.restype = ctypes.c_char_p
 c_cam_iface.cam_iface_get_num_modes.argtypes = [ctypes.c_int,
