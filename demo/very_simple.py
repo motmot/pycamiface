@@ -1,3 +1,4 @@
+# Also the example in ../README.rst -- so keep in sync
 import pkg_resources
 import motmot.cam_iface.choose as cam_iface_choose
 import numpy as np
