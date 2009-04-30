@@ -1,1 +1,6 @@
 dist
+*~
+*.pyc
+build
+dist
+motmot/cam_iface/choose.py
