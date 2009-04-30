@@ -50,7 +50,7 @@ if 0:
     print 'export UNITY_BACKEND_DIR=%s'%libpath
 else:
     include_dirs = None
-ext_modules.append( setupext.get_shm_extension(include_dirs=include_dirs) )
+#ext_modules.append( setupext.get_shm_extension(include_dirs=include_dirs) )
 
 pyrex_backends = []
 if build_pyrex_based_wrappers:
