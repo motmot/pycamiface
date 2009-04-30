@@ -10,7 +10,7 @@
 
 This is a ctypes wrapper of :ref:`libcamiface`.
 
-installation
+Installation
 ============
 
   python setup.py install
