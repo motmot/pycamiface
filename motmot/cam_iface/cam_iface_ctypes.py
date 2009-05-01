@@ -524,10 +524,10 @@ class Camera:
         width = ctypes.c_int(0)
         height = ctypes.c_int(0)
         c_cam_iface.CamContext_get_frame_roi(self.cval,
-                                                ctypes.byref(left),
-                                                ctypes.byref(top),
-                                                ctypes.byref(width),
-                                                ctypes.byref(height))
+                                             ctypes.byref(left),
+                                             ctypes.byref(top),
+                                             ctypes.byref(width),
+                                             ctypes.byref(height))
 
         _check_error()
         return left.value, top.value, width.value, height.value
