@@ -83,7 +83,7 @@ def doit(device_num=0,
     if save:
         format = cam.get_pixel_coding()
         depth = cam.get_pixel_depth()
-        filename = 'simple.fmf'
+        filename = time.strftime( 'simple%Y%m%d_%H%M%S.fmf' )
         fly_movie = FlyMovieFormat.FlyMovieSaver(filename,
                                                  version=3,
                                                  format=format,
