@@ -31,7 +31,19 @@ def main():
                       help="set trigger mode",
                       default=None, dest='trigger_mode')
 
+    parser.add_option("--roi", type="string",
+                      help="set camera region of interest (left,bottom,width,height)",
+                      default=None)
+
     (options, args) = parser.parse_args()
+
+    if options.roi is not None:
+        try:
+            options.roi = tuple(map(int,options.roi.split(',')))
+        except:
+            print >> sys.stderr, "--roi option could not be understood. Use 4 "\
+                "comma-separated integers (L,B,W,H)"
+        assert len(options.roi)==4,"ROI must have 4 components (L,B,W,H)"
 
     print 'options.mode_num',options.mode_num
 
@@ -42,7 +54,8 @@ def main():
     doit(mode_num=mode_num,
          save=options.save,
          max_frames = options.frames,
-         trigger_mode=options.trigger_mode,)
+         trigger_mode=options.trigger_mode,
+         roi=options.roi)
 
 def save_func( fly_movie, save_queue ):
     while 1:
@@ -56,6 +69,7 @@ def doit(device_num=0,
          save=False,
          max_frames=None,
          trigger_mode=None,
+         roi=None,
          ):
     num_modes = cam_iface.get_num_modes(device_num)
     for this_mode_num in range(num_modes):
@@ -93,6 +107,11 @@ def doit(device_num=0,
     print 'Using trigger mode %d'%(cam.get_trigger_mode_number())
 
     cam.start_camera()
+    if roi is not None:
+        cam.set_frame_roi( *roi )
+        actual_roi = cam.get_frame_roi()
+        if roi != actual_roi:
+            raise ValueError("could not set ROI. Actual ROI is %s."%(actual_roi,))
     frametick = 0
     framecount = 0
     last_fps_print = time.time()
