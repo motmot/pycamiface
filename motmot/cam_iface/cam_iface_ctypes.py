@@ -79,6 +79,10 @@ CAM_IFACE_RGB16S=9
 CAM_IFACE_RAW8=10
 CAM_IFACE_RAW16=11
 CAM_IFACE_ARGB8=12
+CAM_IFACE_MONO8_BAYER_BGGR=13
+CAM_IFACE_MONO8_BAYER_RGGB=14
+CAM_IFACE_MONO8_BAYER_GRBG=15
+CAM_IFACE_MONO8_BAYER_GBRG=16
 
 class Camwire_id(ctypes.Structure):
     _fields_ = [('vendor',ctypes.c_char*101),
@@ -488,6 +492,14 @@ class Camera:
             return 'RGB8'
         elif self.cval.contents.coding == CAM_IFACE_ARGB8:
             return 'ARGB8'
+        elif self.cval.contents.coding == CAM_IFACE_MONO8_BAYER_BGGR:
+            return 'MONO8:BGGR'
+        elif self.cval.contents.coding == CAM_IFACE_MONO8_BAYER_RGGB:
+            return 'MONO8:RGGB'
+        elif self.cval.contents.coding == CAM_IFACE_MONO8_BAYER_GRBG:
+            return 'MONO8:GRBG'
+        elif self.cval.contents.coding == CAM_IFACE_MONO8_BAYER_GBRG:
+            return 'MONO8:GBRG'
         else:
             raise NotImplementedError("Can't convert pixel coding representation to string")
 
