@@ -230,15 +230,16 @@ class HardwareFeatureNotAvailable(CamIFaceError):
     pass
 
 def _check_error():
-    CAM_IFACE_BUFFER_OVERFLOW_ERROR=-392081
-    CAM_IFACE_FRAME_DATA_MISSING_ERROR=-392073
-    CAM_IFACE_FRAME_TIMEOUT=-392074
-    CAM_IFACE_FRAME_DATA_LOST_ERROR=-392075
-    CAM_IFACE_HARDWARE_FEATURE_NOT_AVAILABLE=-392076
-    CAM_IFACE_FRAME_INTERRUPTED_SYSCALL=-392078
-
     errnum = c_cam_iface.cam_iface_have_error()
     if errnum != 0:
+
+        CAM_IFACE_BUFFER_OVERFLOW_ERROR=-392081
+        CAM_IFACE_FRAME_DATA_MISSING_ERROR=-392073
+        CAM_IFACE_FRAME_TIMEOUT=-392074
+        CAM_IFACE_FRAME_DATA_LOST_ERROR=-392075
+        CAM_IFACE_HARDWARE_FEATURE_NOT_AVAILABLE=-392076
+        CAM_IFACE_FRAME_INTERRUPTED_SYSCALL=-392078
+
         err_str=c_cam_iface.cam_iface_get_error_string()
         if errnum == CAM_IFACE_BUFFER_OVERFLOW_ERROR:
             exc_type = BuffersOverflowed
