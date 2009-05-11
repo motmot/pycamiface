@@ -2,7 +2,6 @@ import numpy as N
 import ctypes
 assert ctypes.__version__ >= '1.0.1'
 import sys, os
-import pkg_resources
 THREAD_DEBUG = 0
 if THREAD_DEBUG:
     import threading
@@ -31,21 +30,20 @@ if backend_fname is None:
     else:
         raise ValueError("unknown platform '%s'"%sys.platform)
 
-backend_fullpath = pkg_resources.resource_filename(__name__,backend_fname)
-if sys.platform.startswith('linux'):
-    if os.path.exists(backend_fullpath):
+try:
+    if sys.platform.startswith('linux'):
         # Try to use version packaged with this module
-        c_cam_iface = ctypes.cdll.LoadLibrary(backend_fullpath)
-    else:
-        # Try to use system version
         c_cam_iface = ctypes.cdll.LoadLibrary(backend_fname)
-elif sys.platform.startswith('win'):
-    c_cam_iface = ctypes.CDLL(backend_fullpath)
-elif sys.platform.startswith('darwin'):
-    c_cam_iface = ctypes.CDLL(backend_fullpath)
-else:
-    raise ValueError("unknown platform '%s'"%sys.platform)
-
+    elif sys.platform.startswith('win'):
+        c_cam_iface = ctypes.CDLL(backend_fname)
+    elif sys.platform.startswith('darwin'):
+        c_cam_iface = ctypes.CDLL(backend_fname)
+    else:
+        raise ValueError("unknown platform '%s'"%sys.platform)
+except Exception,err:
+    print >> sys.stderr,'Could not open shared library for backend "%s"'%(
+        backend_fname,)
+    raise
 ##################################################
 
 # modified from numpy:
