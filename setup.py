@@ -8,7 +8,7 @@ package_data={}
 ext_modules = []
 
 build_ctypes_based_wrappers = True
-include_shlibs_for_ctypes = True
+include_shlibs_for_ctypes = False
 
 if sys.platform.startswith('linux'):
     include_shlibs_for_ctypes = False
