@@ -134,6 +134,8 @@ def _ensure_cam_iface_version_OK():
 
 _ensure_cam_iface_version_OK()
 
+c_cam_iface.cam_iface_have_error.restype = ctypes.c_int
+c_cam_iface.cam_iface_have_error.argtypes = []
 c_cam_iface.cam_iface_get_driver_name.restype = ctypes.c_char_p
 c_cam_iface.cam_iface_get_error_string.restype = ctypes.c_char_p
 c_cam_iface.cam_iface_get_num_modes.argtypes = [ctypes.c_int,
