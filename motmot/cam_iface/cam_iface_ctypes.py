@@ -127,7 +127,7 @@ c_cam_iface.cam_iface_get_api_version.restype = ctypes.c_char_p
 
 def _ensure_cam_iface_version_OK():
     actual = c_cam_iface.cam_iface_get_api_version()
-    expected = "20090331"
+    expected = "20090531"
     if actual != expected:
         raise RuntimeError("libcamiface mismatch: expected %s, got %s"%(
             expected,actual))
