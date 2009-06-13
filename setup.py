@@ -67,11 +67,6 @@ if build_pyrex_based_wrappers:
         except Exception,err:
             print 'WARNING: Not building camwire pyrex backend (error "%s")'%str(err)
 
-class PlatformDependentDistribution(Distribution):
-    # Force platform-dependant build.
-    def has_ext_modules(self):
-        return True
-
 setup_autogen.generate_choose_module(pyrex_backends, ctypes_backends)
 
 setup(name='motmot.cam_iface',
@@ -87,6 +82,5 @@ are involved with digital camera acquisition and analysis""",
       packages = find_packages(),#['cam_iface','cam_iface_choose'],
       ext_modules=ext_modules,
       zip_safe=True,
-      distclass = PlatformDependentDistribution,
       package_data=package_data,
       )
