@@ -9,6 +9,7 @@ if THREAD_DEBUG:
 __all__ = ['CamIFaceError','BuffersOverflowed',
            'FrameTimeout',
            'FrameDataMissing',
+           'FrameDataCorrupt',
            'get_driver_name','get_num_cameras',
            'get_num_modes','get_mode_string',
            'get_camera_info','Camera',
@@ -235,6 +236,9 @@ class FrameTimeout(CamIFaceError):
 class FrameDataMissing(CamIFaceError):
     pass
 
+class FrameDataCorrupt(CamIFaceError):
+    pass
+
 class FrameSystemCallInterruption(CamIFaceError):
     pass
 
@@ -255,6 +259,7 @@ def _check_error():
         CAM_IFACE_HARDWARE_FEATURE_NOT_AVAILABLE=-392076
         CAM_IFACE_FRAME_INTERRUPTED_SYSCALL=-392078
         CAM_IFACE_SELECT_RETURNED_BUT_NO_FRAME_AVAILABLE=-392079
+        CAM_IFACE_FRAME_DATA_CORRUPT_ERROR=-392080
 
         err_str=c_cam_iface.cam_iface_get_error_string()
         if errnum == CAM_IFACE_BUFFER_OVERFLOW_ERROR:
@@ -269,6 +274,8 @@ def _check_error():
             exc_type = FrameTimeout
         elif errnum == CAM_IFACE_HARDWARE_FEATURE_NOT_AVAILABLE:
             exc_type = HardwareFeatureNotAvailable
+        elif errnum == CAM_IFACE_FRAME_DATA_CORRUPT_ERROR:
+            exc_type = FrameDataCorrupt
         else:
             exc_type = CamIFaceError
         c_cam_iface.cam_iface_clear_error()
