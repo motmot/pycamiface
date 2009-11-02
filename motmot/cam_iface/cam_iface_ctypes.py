@@ -122,13 +122,18 @@ class CameraPropertyInfo(ctypes.Structure):
                 ('scaled_unit_name',ctypes.c_char_p),
                 ('scale_offset',ctypes.c_double),
                 ('scale_gain',ctypes.c_double),
+                ('available',ctypes.c_int),
+                ('absolute_capable',ctypes.c_int),
+                ('absolute_control_mode',ctypes.c_int),
+                ('absolute_min_value',ctypes.c_double),
+                ('absolute_max_value',ctypes.c_double),
                 ]
 
 c_cam_iface.cam_iface_get_api_version.restype = ctypes.c_char_p
 
 def _ensure_cam_iface_version_OK():
     actual = c_cam_iface.cam_iface_get_api_version()
-    expected = "20090531"
+    expected = "20091102"
     if actual != expected:
         raise RuntimeError("libcamiface mismatch: expected %s, got %s"%(
             expected,actual))
