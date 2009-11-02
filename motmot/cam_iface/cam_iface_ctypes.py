@@ -461,7 +461,13 @@ class Camera:
                   'max_value':info.max_value,
                   'has_auto_mode':info.has_auto_mode,
                   'has_manual_mode':info.has_manual_mode,
-                  'is_scaled_quantity':info.is_scaled_quantity}
+                  'is_scaled_quantity':info.is_scaled_quantity,
+                  'available':info.available,
+                  'absolute_capable':info.absolute_capable,
+                  'absolute_control_mode':info.absolute_control_mode,
+                  'absolute_min_value':info.absolute_min_value,
+                  'absolute_max_value':info.absolute_max_value,
+                  }
         if result['is_scaled_quantity']:
             result.update({'scaled_unit_name':info.scaled_unit_name,
                            'scale_offset':info.scale_offset,
