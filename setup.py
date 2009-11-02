@@ -19,7 +19,7 @@ else:
     build_pyrex_based_wrappers = False
     #build_pyrex_based_wrappers = True
 
-ctypes_backends = ['unity']
+ctypes_backends = ['mega','unity']
 if build_ctypes_based_wrappers:
     if include_shlibs_for_ctypes:
         if sys.platform == 'win32':

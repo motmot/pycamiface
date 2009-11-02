@@ -33,8 +33,8 @@ A very simple example of usage is in the file
   import motmot.cam_iface.choose as cam_iface_choose
   import numpy as np
 
-  # Choose the unity ctypes backend
-  cam_iface = cam_iface_choose.import_backend( 'unity', 'ctypes' )
+  # Choose the mega ctypes backend
+  cam_iface = cam_iface_choose.import_backend( 'mega', 'ctypes' )
 
   mode_num = 0
   device_num = 0
