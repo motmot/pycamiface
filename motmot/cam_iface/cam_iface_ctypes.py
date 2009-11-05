@@ -122,7 +122,10 @@ class CameraPropertyInfo(ctypes.Structure):
                 ('scaled_unit_name',ctypes.c_char_p),
                 ('scale_offset',ctypes.c_double),
                 ('scale_gain',ctypes.c_double),
+                ('original_value',ctypes.c_long),
                 ('available',ctypes.c_int),
+                ('readout_capable',ctypes.c_int),
+                ('on_off_capable',ctypes.c_int),
                 ('absolute_capable',ctypes.c_int),
                 ('absolute_control_mode',ctypes.c_int),
                 ('absolute_min_value',ctypes.c_double),
@@ -133,7 +136,7 @@ c_cam_iface.cam_iface_get_api_version.restype = ctypes.c_char_p
 
 def _ensure_cam_iface_version_OK():
     actual = c_cam_iface.cam_iface_get_api_version()
-    expected = "20091102"
+    expected = "20091105"
     if actual != expected:
         raise RuntimeError("libcamiface mismatch: expected %s, got %s"%(
             expected,actual))
@@ -462,7 +465,10 @@ class Camera:
                   'has_auto_mode':info.has_auto_mode,
                   'has_manual_mode':info.has_manual_mode,
                   'is_scaled_quantity':info.is_scaled_quantity,
+                  'original_value':info.original_value,
                   'available':info.available,
+                  'readout_capable':info.readout_capable,
+                  'on_off_capable':info.on_off_capable,
                   'absolute_capable':info.absolute_capable,
                   'absolute_control_mode':info.absolute_control_mode,
                   'absolute_min_value':info.absolute_min_value,
