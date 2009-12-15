@@ -17,7 +17,7 @@ def main():
 
     parser = OptionParser(usage)
 
-    parser.add_option("--mode-num", type="int",
+    parser.add_option("--mode-num", type="int",default = None,
                       help="mode number")
 
     parser.add_option("--frames", type="int",
@@ -47,11 +47,7 @@ def main():
 
     print 'options.mode_num',options.mode_num
 
-    if options.mode_num is not None:
-        mode_num = options.mode_num
-    else:
-        mode_num = 0
-    doit(mode_num=mode_num,
+    doit(mode_num=options.mode_num,
          save=options.save,
          max_frames = options.frames,
          trigger_mode=options.trigger_mode,
@@ -64,7 +60,7 @@ def save_func( fly_movie, save_queue ):
         fly_movie.add_frame(frame,timestamp)
 
 def doit(device_num=0,
-         mode_num=0,
+         mode_num=None,
          num_buffers=30,
          save=False,
          max_frames=None,
@@ -75,7 +71,12 @@ def doit(device_num=0,
     for this_mode_num in range(num_modes):
         mode_str = cam_iface.get_mode_string(device_num,this_mode_num)
         print 'mode %d: %s'%(this_mode_num,mode_str)
-
+        if mode_num is None:
+            if 'DC1394_VIDEO_MODE_FORMAT7_0' in mode_str and 'MONO8' in mode_str:
+                mode_num=this_mode_num
+    
+    if mode_num is None:
+        mode_num=0
     print 'choosing mode %d'%(mode_num,)
 
     cam = cam_iface.Camera(device_num,num_buffers,mode_num)
