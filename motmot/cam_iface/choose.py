@@ -1,6 +1,10 @@
+"""There is no reason to use this module. It exists for backward compatibility."""
 import sys, os, warnings
 
 def import_backend( lib_name, wrapper ):
+    """import a cam_iface backend
+
+    There is no reason to use this function. It exists for backward compatibility."""
     if wrapper != 'ctypes':
         warnings.warn('only ctypes wrapper supported')
         wrapper = 'ctypes'
