@@ -1,3 +1,4 @@
+import setuptools # required for namespace_packages option, below
 from distutils.core import setup
 import os, sys
 
