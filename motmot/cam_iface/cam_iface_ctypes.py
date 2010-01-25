@@ -15,21 +15,23 @@ __all__ = ['CamIFaceError','BuffersOverflowed',
            'get_camera_info','Camera',
            'get_wrapper_name','shutdown']
 
-backend_fname = os.environ.get('CAM_IFACE_CTYPES_BACKEND',None)
-if backend_fname is None:
-    if sys.platform.startswith('linux'):
-        #backend_fname = 'libcam_iface_camwire.so'
-        #backend_fname = 'libcam_iface_prosilica_gige.so'
-        #backend_fname = 'libcam_iface_dc1394.so'
-        backend_fname = 'libcam_iface_blank.so'
-    elif sys.platform.startswith('win'):
-        #backend_fname = 'cam_iface_imperx.dll'
-        backend_fname = 'cam_iface_blank.dll'
+if 1:
+    lib_name = 'mega'
+
+    if sys.platform == 'win32':
+        prefix = ''
+        extension = '.dll'
+    elif sys.platform.startswith('linux'):
+        prefix = 'lib'
+        extension = '.so'
     elif sys.platform.startswith('darwin'):
-        #backend_fname = 'libcam_iface_dc1394.dylib'
-        backend_fname = 'libcam_iface_blank.dylib'
+        prefix = 'lib'
+        extension = '.dylib'
     else:
         raise ValueError("unknown platform '%s'"%sys.platform)
+
+    backend_fname = (prefix+'cam_iface_'+
+                     lib_name+extension)
 
 backend_path = os.environ.get('CAM_IFACE_CTYPES_PATH',None)
 #backend_path=r"C:\Program Files\libcamiface 0.5.3\bin"
