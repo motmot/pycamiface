@@ -8,7 +8,8 @@
   module: cam_iface
   single: cam_iface
 
-This is a ctypes wrapper of :ref:`libcamiface`.
+This is a ctypes wrapper of :ref:`libcamiface`. It requires
+libcamiface 0.5.9 or higher.
 
 Installation
 ============
@@ -29,12 +30,10 @@ Example usage
 A very simple example of usage is in the file
 ``demo/very_simple.py``. This file contains the following::
 
+  # Also the example in ../README.rst -- so keep in sync
   import pkg_resources
-  import motmot.cam_iface.choose as cam_iface_choose
+  import motmot.cam_iface.cam_iface_ctypes as cam_iface
   import numpy as np
-
-  # Choose the mega ctypes backend
-  cam_iface = cam_iface_choose.import_backend( 'mega', 'ctypes' )
 
   mode_num = 0
   device_num = 0
