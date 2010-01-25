@@ -1,8 +1,6 @@
 from distutils.core import setup
 import os, sys
 
-import setupext
-
 package_data={}
 ext_modules = []
 
@@ -42,7 +40,6 @@ if 0:
     print 'export LD_LIBRARY_PATH=%s'%libpath
 else:
     include_dirs = None
-#ext_modules.append( setupext.get_shm_extension(include_dirs=include_dirs) )
 
 setup(name='motmot.cam_iface',
       description='cross-platform, cross-backend camera driver',
