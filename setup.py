@@ -53,6 +53,5 @@ are involved with digital camera acquisition and analysis""",
       namespace_packages = ['motmot'],
       packages = ['motmot','motmot.cam_iface'],
       ext_modules=ext_modules,
-      zip_safe=True,
       package_data=package_data,
       )
