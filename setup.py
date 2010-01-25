@@ -13,13 +13,7 @@ include_shlibs_for_ctypes = False
 if sys.platform.startswith('linux'):
     include_shlibs_for_ctypes = False
 
-if sys.platform == 'win32':
-    build_pyrex_based_wrappers = False
-else:
-    build_pyrex_based_wrappers = False
-    #build_pyrex_based_wrappers = True
-
-ctypes_backends = ['mega','unity']
+ctypes_backends = ['mega']
 if build_ctypes_based_wrappers:
     if include_shlibs_for_ctypes:
         if sys.platform == 'win32':
@@ -47,25 +41,9 @@ if 0:
     libpath = os.path.abspath(opj(CAMIFACE_PREFIX,'lib'))
     print 'WARNING: compiling without system install of camiface. You probably need to do this:'
     print 'export LD_LIBRARY_PATH=%s'%libpath
-    print 'export UNITY_BACKEND_DIR=%s'%libpath
 else:
     include_dirs = None
 #ext_modules.append( setupext.get_shm_extension(include_dirs=include_dirs) )
-
-pyrex_backends = []
-if build_pyrex_based_wrappers:
-    #ext_modules.append( setupext.get_blank_extension() )
-    if sys.platform == 'win32':
-        #ext_modules.append( get_cmu1394_extension() )
-        #ext_modules.append( get_bcam_extension() )
-        pass # none compile easily out of the box
-    elif sys.platform.startswith('linux'):
-        #ext_modules.append( setupext.get_dc1394_extension() ); pyrex_backends.append('dc1394')
-        try:
-            ext_modules.append( setupext.get_camwire_extension() )
-            pyrex_backends.append('camwire')
-        except Exception,err:
-            print 'WARNING: Not building camwire pyrex backend (error "%s")'%str(err)
 
 setup(name='motmot.cam_iface',
       description='cross-platform, cross-backend camera driver',
