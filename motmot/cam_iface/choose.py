@@ -1,9 +1,9 @@
+import sys, os, warnings
+
 ctypes_backends = ['mega']
 
 wrappers_and_backends = {'ctypes':ctypes_backends,
                          }
-
-import sys, os
 
 if sys.platform == 'win32':
     prefix = ''
@@ -29,8 +29,11 @@ def import_backend( lib_name, wrapper ):
     if valid_backends is None:
         raise ValueError("unknown wrapper '%s'"%wrapper)
     if lib_name not in valid_backends:
-        raise ValueError("Valid backends for the '%s' wrapper: %s (You asked for '%s'.)"%
-                         (wrapper,str(valid_backends),lib_name))
+        new_lib_name = valid_backends[0]
+        warnings.warn("Valid backends for the '%s' wrapper: %s "
+                      "(You asked for '%s', switching to '%s'.)"%
+                      (wrapper,str(valid_backends),lib_name,new_lib_name))
+        lib_name = new_lib_name
     if wrapper == 'ctypes':
         if 'motmot.cam_iface.cam_iface_ctypes' in sys.modules:
             raise RuntimeError('ctypes backend already imported')
