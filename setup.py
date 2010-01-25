@@ -1,5 +1,4 @@
-from setuptools import setup, find_packages
-from setuptools.dist import Distribution
+from distutils.core import setup
 import os, sys
 
 import setupext
@@ -55,7 +54,7 @@ are involved with digital camera acquisition and analysis""",
       author_email='strawman@astraw.com',
       license="BSD",
       namespace_packages = ['motmot'],
-      packages = find_packages(),#['cam_iface','cam_iface_choose'],
+      packages = ['motmot','motmot.cam_iface'],
       ext_modules=ext_modules,
       zip_safe=True,
       package_data=package_data,
