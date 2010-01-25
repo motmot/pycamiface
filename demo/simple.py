@@ -1,7 +1,5 @@
 import pkg_resources
-import motmot.cam_iface.choose as cam_iface_choose
-
-cam_iface = cam_iface_choose.import_backend( 'mega', 'ctypes' )
+import motmot.cam_iface.cam_iface_ctypes as cam_iface
 
 import numpy as nx
 import time, sys, os
