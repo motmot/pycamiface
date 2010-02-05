@@ -1,6 +1,8 @@
 """There is no reason to use this module. It exists for backward compatibility."""
 import sys, os, warnings
 
+wrappers_and_backends = {'ctypes':['mega']} # for backwards compatibility
+
 def import_backend( lib_name, wrapper ):
     """import a cam_iface backend
 
