@@ -23,7 +23,7 @@ if 1:
         extension = '.dll'
     elif sys.platform.startswith('linux'):
         prefix = 'lib'
-        extension = '.so'
+        extension = '.so.0'
     elif sys.platform.startswith('darwin'):
         prefix = 'lib'
         extension = '.dylib'
