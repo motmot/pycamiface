@@ -237,9 +237,6 @@ c_cam_iface.CamContext_set_num_framebuffers.argtypes = [
 class CamIFaceError(Exception):
     pass
 
-class BuffersOverflowed(CamIFaceError):
-    pass
-
 class FrameTimeout(CamIFaceError):
     pass
 
@@ -258,11 +255,16 @@ class NoFrameReturned(CamIFaceError):
 class HardwareFeatureNotAvailable(CamIFaceError):
     pass
 
+class BuffersOverflowed(CamIFaceError):
+    pass
+
+class CameraNotAvailable(CamIFaceError):
+    pass
+
 def _check_error():
     errnum = c_cam_iface.cam_iface_have_error()
     if errnum != 0:
 
-        CAM_IFACE_BUFFER_OVERFLOW_ERROR=-392081
         CAM_IFACE_FRAME_DATA_MISSING_ERROR=-392073
         CAM_IFACE_FRAME_TIMEOUT=-392074
         CAM_IFACE_FRAME_DATA_LOST_ERROR=-392075
@@ -270,12 +272,11 @@ def _check_error():
         CAM_IFACE_FRAME_INTERRUPTED_SYSCALL=-392078
         CAM_IFACE_SELECT_RETURNED_BUT_NO_FRAME_AVAILABLE=-392079
         CAM_IFACE_FRAME_DATA_CORRUPT_ERROR=-392080
-        CAM_IFACE_CAMERA_NOT_AVAILABLE_ERROR=-392081
+        CAM_IFACE_BUFFER_OVERFLOW_ERROR=-392081
+        CAM_IFACE_CAMERA_NOT_AVAILABLE_ERROR=-392082
 
         err_str=c_cam_iface.cam_iface_get_error_string()
-        if errnum == CAM_IFACE_BUFFER_OVERFLOW_ERROR:
-            exc_type = BuffersOverflowed
-        elif errnum == CAM_IFACE_FRAME_DATA_MISSING_ERROR:
+        if errnum == CAM_IFACE_FRAME_DATA_MISSING_ERROR:
             exc_type = FrameDataMissing
         elif errnum == CAM_IFACE_FRAME_INTERRUPTED_SYSCALL:
             exc_type = FrameSystemCallInterruption
@@ -287,6 +288,10 @@ def _check_error():
             exc_type = HardwareFeatureNotAvailable
         elif errnum == CAM_IFACE_FRAME_DATA_CORRUPT_ERROR:
             exc_type = FrameDataCorrupt
+        elif errnum == CAM_IFACE_BUFFER_OVERFLOW_ERROR:
+            exc_type = BuffersOverflowed
+        elif errnum == CAM_IFACE_CAMERA_NOT_AVAILABLE_ERROR:
+            exc_type = CameraNotAvailable
         else:
             exc_type = CamIFaceError
         c_cam_iface.cam_iface_clear_error()
