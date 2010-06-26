@@ -3,3 +3,4 @@ dist
 *.pyc
 build
 dist
+motmot.cam_iface.egg-info
