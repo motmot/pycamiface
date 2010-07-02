@@ -40,10 +40,7 @@ if backend_path is not None:
         SetDllDirectory = ctypes.windll.kernel32.SetDllDirectoryW
         SetDllDirectory(backend_path)
     else:
-        raise NotImplementedError('Unable to set backend search path')
-    print "set dll directory to '%s'. files:"%(backend_path,)
-    for f in os.listdir(backend_path):
-        print '  %s'%(f,)
+        backend_fname = os.path.join( backend_path, backend_fname )
 
 try:
     if sys.platform.startswith('linux'):
