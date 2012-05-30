@@ -47,7 +47,7 @@ setup(name='motmot.cam_iface',
       long_description="""cam_iface is the core packge of several that
 are involved with digital camera acquisition and analysis""",
       url='http://code.astraw.com/projects/motmot/cam_iface.html',
-      version='0.5.4+git',
+      version='0.5.5',
       author='Andrew Straw',
       author_email='strawman@astraw.com',
       license="BSD",
