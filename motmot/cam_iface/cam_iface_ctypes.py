@@ -135,7 +135,7 @@ c_cam_iface.cam_iface_get_api_version.restype = ctypes.c_char_p
 
 def _ensure_cam_iface_version_OK():
     actual = c_cam_iface.cam_iface_get_api_version()
-    expected = "20091105"
+    expected = "20120806"
     if actual != expected:
         raise RuntimeError("libcamiface mismatch: expected %s, got %s"%(
             expected,actual))
@@ -152,7 +152,7 @@ c_cam_iface.cam_iface_get_mode_string.argtypes = [ctypes.c_int,
                                                   ctypes.c_int,
                                                   ctypes.POINTER(ctypes.c_char),
                                                   ctypes.c_int]
-cam_iface_constructor_func_t = ctypes.CFUNCTYPE( PTR_CamContext_t, ctypes.c_int, ctypes.c_int, ctypes.c_int )
+cam_iface_constructor_func_t = ctypes.CFUNCTYPE( PTR_CamContext_t, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p )
 c_cam_iface.cam_iface_get_constructor_func.restype = cam_iface_constructor_func_t
 c_cam_iface.cam_iface_get_constructor_func.argtypes = [ctypes.c_int]
 c_cam_iface.delete_CamContext.argtypes = [ctypes.POINTER(CamContext)]
@@ -323,12 +323,12 @@ def get_camera_info(index):
     return camid.vendor, camid.model, camid.chip
 
 class Camera:
-    def __init__(self,device_number,num_buffers,mode_number):
+    def __init__(self,device_number,num_buffers,mode_number,interface=None):
         if THREAD_DEBUG:
             self.mythread=threading.currentThread()
         new_CamContext = c_cam_iface.cam_iface_get_constructor_func(device_number)
         self.cval = new_CamContext(device_number,num_buffers,
-                                   mode_number)
+                                   mode_number,interface)
         _check_error()
 
     def __del__(self):
