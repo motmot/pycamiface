@@ -33,12 +33,12 @@ if 1:
     backend_fname = (prefix+'cam_iface_'+
                      lib_name+extension)
 
-backend_path = os.environ.get('CAM_IFACE_CTYPES_PATH',None)
+backend_path = os.environ.get('CAM_IFACE_CTYPES_PATH',None)  # unicode here better? otterb
 #backend_path=r"C:\Program Files\libcamiface 0.5.3\bin"
 if backend_path is not None:
     if sys.platform=='win32':
         SetDllDirectory = ctypes.windll.kernel32.SetDllDirectoryW
-        SetDllDirectory(backend_path)
+        SetDllDirectory(unicode(backend_path)) # unicode was necessary in python2.7 on Windows 7
     else:
         backend_fname = os.path.join( backend_path, backend_fname )
 
