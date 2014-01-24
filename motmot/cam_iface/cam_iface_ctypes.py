@@ -6,6 +6,8 @@ THREAD_DEBUG = 0
 if THREAD_DEBUG:
     import threading
 
+__version__ = "20120806"
+
 __all__ = ['CamIFaceError','BuffersOverflowed',
            'FrameTimeout',
            'FrameDataMissing',
@@ -135,10 +137,9 @@ c_cam_iface.cam_iface_get_api_version.restype = ctypes.c_char_p
 
 def _ensure_cam_iface_version_OK():
     actual = c_cam_iface.cam_iface_get_api_version()
-    expected = "20120806"
-    if actual != expected:
+    if actual != __version__:
         raise RuntimeError("libcamiface mismatch: expected %s, got %s"%(
-            expected,actual))
+            __version__,actual))
 
 _ensure_cam_iface_version_OK()
 
@@ -293,6 +294,29 @@ def _check_error():
             exc_type = CamIFaceError
         c_cam_iface.cam_iface_clear_error()
         raise exc_type(err_str)
+
+def get_library_info():
+    """
+    returns (pycamiface_path,pycamiface_version),(libcamiface_path,libcamiface_version)
+    """
+    py_libinfo = os.path.abspath(__file__),__version__
+    if backend_path is not None:
+        #the user set the CAM_IFACE_CTYPES_PATH env variable, so this is already
+        #a full path
+        libname = backend_fname
+    else:
+        #use ldconfig to find the full path
+        libname = c_cam_iface._name
+        #try and find the full path
+        if libname:
+            f = os.popen('/sbin/ldconfig -p 2>/dev/null | grep %s' % libname)
+            try:
+                data = f.read()
+                libname = data.split('=>')[-1].strip()
+            finally:
+                f.close()
+    c_libinfo = (libname, c_cam_iface.cam_iface_get_api_version())
+    return py_libinfo,c_libinfo
 
 def get_driver_name():
     return c_cam_iface.cam_iface_get_driver_name()

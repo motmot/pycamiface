@@ -9,6 +9,10 @@ except ImportError:
 
 import motmot.cam_iface.cam_iface_ctypes as cam_iface
 
+py_libinfo,c_libinfo = cam_iface.get_library_info()
+print "pylibcamiface: loaded from %s version: %s" % py_libinfo
+print "  libcamiface: loaded from %s version: %s" % c_libinfo
+
 mode_num = 0
 device_num = 0
 num_buffers = 32
