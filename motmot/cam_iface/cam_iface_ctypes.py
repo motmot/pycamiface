@@ -6,7 +6,7 @@ THREAD_DEBUG = 0
 if THREAD_DEBUG:
     import threading
 
-__version__ = "20120806"
+__version__ = "20140124"
 
 __all__ = ['CamIFaceError','BuffersOverflowed',
            'FrameTimeout',
